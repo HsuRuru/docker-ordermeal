@@ -2,8 +2,8 @@ sudo: required
 services:
   - docker
 
-before_install:
-  - docker build -t ruhsu/client-test -f ./order-app-client .
+#before_install:
+#  - docker build -t ruhsu/client-test -f ./order-app-client .
 #  - docker build -t ruhsu/order-app -f .
 
 # script:
