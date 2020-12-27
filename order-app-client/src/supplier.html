@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <link href='css/toastr.css' rel='stylesheet' />
+  <link href='css/main.css' rel='stylesheet' />
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.js" crossorigin="anonymous"></script>
+  <script src='js/axios.js'></script>
+  <script src='js/toastr.min.js'></script>
+
+  <style>
+    /* #app {
+      background-color: #202247;
+      color: white;
+    } */
+
+    header {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      /* z-index: 99999 !important; */
+    }
+
+    nav,
+    main {
+      margin-top: 4rem !important;
+    }
+
+    main {
+      padding: 2rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <v-app>
+      <v-navigation-drawer v-model="drawer" app color="grey lighten-5" permanent expand-on-hover>
+
+        <template>
+          <v-list>
+            <v-list-item class="px-2">
+              <v-avatar color="cyan darken-3" size="36">
+                <v-icon dark>
+                  mdi-account-circle
+                </v-icon>
+              </v-avatar>
+              <v-list-item-content style="padding-left: 10px;">
+                <v-list-item-title class="title">
+                  {{ username }}
+                </v-list-item-title>
+                <v-list-item-subtitle>管理者</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+
+          <v-divider></v-divider>
+
+          <v-list>
+            <!-- <v-subheader>基本設定</v-subheader> -->
+            <v-list-item-group v-model="newitem" color="primary">
+              <v-list-item v-for="(item, i) in newitems" :key="i">
+                <v-list-item-icon>
+                  <v-icon v-text="item.icon"></v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.text"></v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+        </template>
+
+      </v-navigation-drawer>
+
+      <v-app-bar color="cyan darken-3" dark flat app>
+
+        <!-- <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon> -->
+
+        <v-toolbar-title><b>{{ appTitle }}</b></v-toolbar-title>
+
+        <v-spacer></v-spacer>
+
+        <!-- <v-btn icon>
+          <v-icon>mdi-filter</v-icon>
+        </v-btn> -->
+
+        <v-btn icon>
+          <v-icon>mdi-dots-vertical</v-icon>
+        </v-btn>
+
+      </v-app-bar>
+
+      <main style="margin: 0px 20px 0px 68px; padding: 0px;">
+        <v-row>
+          <v-col :key="1" cols="8">
+            <b class="init-font" style="font-size: 20px; font-weight: 900;">供餐廠商</b>
+          </v-col>
+          <v-col :key="2" cols="4" style="text-align: right;">
+            <v-btn color="primary" fab x-small dark @click="showAddDialog()">
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+        <v-divider></v-divider>
+
+        <v-container class="grey lighten-5" fluid style="border: 1px solid #e2dfdf !important;">
+          <v-row no-gutters>
+            <v-col :key="1" cols="12" sm="3" style="margin-top: -15px; margin-bottom: -15px;">
+              <v-layout row ma-2>
+                <!-- <v-select v-model="searchOrg" label="廠處" no-data-text="查無資料 !">
+                  <option v-for="org in orgList" :value="org.val_">{{ org.label_ }}</option>
+                </v-select> -->
+
+                <v-select :items="orgList" item-text="label_" item-value="val_" label="廠處" no-data-text="查無資料 !"
+                  v-model="searchOrg"></v-select>
+
+              </v-layout>
+            </v-col>
+            <v-col :key="2" cols="12" sm="3" style="margin-top: -15px; margin-bottom: -15px;">
+              <v-layout row ma-2>
+                <v-text-field label="供餐廠商" v-model="searchSupp" v-on:keyup.enter="apiGetSuppWithSearch">
+                </v-text-field>
+              </v-layout>
+            </v-col>
+            <v-col :key="3" cols="12" sm="3" style="margin-top: -15px; margin-bottom: -15px;">
+              <v-btn small color="primary" style="margin-top:23px;" @click="apiGetSuppWithSearch">查詢
+              </v-btn>
+            </v-col>
+            <v-col :key="4" cols="12" sm="3"></v-col>
+          </v-row>
+        </v-container>
+        <br />
+
+        <v-data-table :headers="dtSuppHeader" :items="dtSuppItem" :sort-by="['org']" mobile-breakpoint="800"
+          class="elevation-1">
+          <template v-slot:item.actions="item">
+            <v-btn text small color="primary" @click="showEditDialog(item)">
+              <v-icon small class="mr-2" color="primary"> mdi-pencil </v-icon><span style="color:#1976d2">編輯廠商</span>
+            </v-btn> |
+            <!-- <v-btn text small color="primary" @click="showMenuDialog(item)">
+              <v-icon small class="mr-2" color="primary"> mdi-food-fork-drink </v-icon><span
+                style="color:#1976d2">菜單維護</span>
+            </v-btn> | -->
+            <v-btn text small color="primary" @click="showDeleteDialog(item)">
+              <v-icon small class="mr-2" color="pink"> mdi-delete </v-icon><span style="color:#e91e63">刪除</span>
+            </v-btn>
+          </template>
+          <template v-slot:item.details="item">
+            <div class="text-truncate" style="width: 180px">
+              {{item.Details}}
+            </div>
+          </template>
+
+          <template slot="no-data"><br>
+            <v-alert text prominent type="error" icon="mdi-alert-circle">查無資料 !</v-alert>
+          </template>
+        </v-data-table>
+
+        <!-- insert/update dialog -->
+        <v-row justify="center">
+          <v-dialog v-model="dialog" persistent max-width="600px">
+            <v-card>
+              <v-card-title class="bg-DarkGreen" :class="isEdit == false ? 'bg-Blue' : 'bg-DarkGreen'">
+                <span class="headline init-font">供餐廠商 |
+                  <span v-if="isEdit" class="init-font" style="font-size: 12px;">編輯</span>
+                  <span v-else class="init-font" style="font-size: 12px;">新增</span>
+                </span>
+                <v-spacer></v-spacer>
+                <v-btn color="white" text @click="dialog = false"><span
+                    style="font-size: 27px !important;">&times;</span></v-btn>
+              </v-card-title>
+              <v-card-text>
+                <br>
+                <v-row class="init-font" style="padding: 0 20px;">
+                  <v-col cols="12" sm="12" md="12">
+                    <v-text-field label="廠商*" required v-model="supplier.suppName" autocomplete="off">
+                    </v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="6">
+                    <v-text-field label="連絡電話" v-model="supplier.tel" autocomplete="off">
+                    </v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="6">
+                    <v-text-field label="傳真號碼" v-model="supplier.fax" autocomplete="off">
+                    </v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="12" md="12">
+                    <v-text-field label="地址" v-model="supplier.address" autocomplete="off">
+                    </v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="12" md="12">
+                    <v-select :items="orgList" item-text="label_" item-value="val_" label="所屬廠處*" placeholder=" "
+                      v-model="supplier.org" required></v-select>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" text @click="confirmUpdateSupplier(isEdit)">送出</v-btn>
+                <v-btn color="secondary" text @click="dialog = false">取消</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-row>
+
+        <!-- delete dialog -->
+        <v-dialog v-model="dialogDelete" max-width="500px">
+          <v-card>
+            <v-card-title class="bg-DarkRed init-font">刪除廠商</v-card-title>
+            <v-card-text class="init-font" style="font-size: 15px;"><br>確定將廠商資料刪除 ? <br></v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="error" text @click="deleteSupplier()">刪除</v-btn>
+              <v-btn color="secondary" text @click="dialogDelete = false">取消</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+      </main>
+    </v-app>
+  </div>
+
+  <script>
+    console.clear();
+    const auth = sessionStorage.getItem("accessToken");
+    const username = sessionStorage.getItem("username");
+
+    // const auth = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZGltaW4iLCJpYXQiOjE2MDcxNDMyNDgsImV4cCI6MTYwNzE0NDE0OH0.wm0mUr7d_HZb5Zn9I6dzl5qOE5FWXdtI2gJFoWONvDWtdLiVGgL1a9zCV-FXOI7jGuCqq5YPyeRroVDzUdLEDQ";
+    const baseURL = "http://127.0.0.1:8080/api";
+    const config = {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Authorization': 'Bearer ' + auth
+    };
+    var apiRequest = axios.create({
+      baseURL: baseURL,
+      headers: config
+    });
+
+    //const callApi = 'http://localhost:3004';
+    const app = new Vue({
+      el: "#app",
+      vuetify: new Vuetify({}),
+
+      data: function () {
+        return {
+          username: username,
+          appTitle: "訂餐管理平台",
+          drawer: false,
+          clipped: false,
+
+          newitem: false,
+          newitems: [
+            { text: "帳號管理", icon: "mdi-account-multiple" },
+            { text: "角色管理", icon: "mdi-account-group" },
+            { text: "供餐廠商", icon: "mdi-flag" }
+          ],
+
+          dtSuppHeader: [
+            { text: '供餐廠商', value: 'suppName', sortable: false },
+            { text: '連絡電話', value: 'tel', sortable: false },
+            { text: '傳真號碼', value: 'fax', sortable: false },
+            { text: '地址', value: 'address', sortable: false },
+            { text: '所處廠處', value: 'org' },
+            { text: ' ', value: 'actions', sortable: false, align: 'right' }
+          ],
+          dtSuppItem: [],
+          dtSuppMenuHeader: [
+            { text: '供餐時段', value: 'orderPeriod', sortable: false },
+            { text: '餐點', value: 'mealName', sortable: false },
+            { text: '單價', value: 'price', sortable: false, align: 'right' },
+            { text: ' ', value: 'actions', sortable: false, align: 'right' }
+          ],
+          dtSuppMenuItem: [],
+          menuItemList: {},
+          editedSupp: {},
+          deleteSupp: {},
+          dialog: false,
+          dialogDelete: false,
+          dialogMenu: false,
+          dialogMenuEdit: false,
+          isEdit: false,
+          supplier: { id: 0, suppName: '', tel: '', fax: '', address: '', org: '' },
+          suppMenu: { newMealName: '', newPrice: '', mealId: 0, mealName: '', price: '', orderPeriod: '' },
+          suppList: [],
+          orgList: [],
+          orderPeriodList: [],
+          requiredRule: function requiredRule(v) {
+            if (v == "") return '此為必填欄位 !';
+            return true;
+          },
+          numberRule: function numberRule(v) {
+            if (!v.trim()) return true;
+            if (!isNaN(parseFloat(v)) && v > 0) return true;
+            return '請輸入數字 !';
+          },
+          searchOrg: '1', searchSupp: '',
+        };
+      },
+      mounted: function () {
+        let vm = this;
+        this.apiGetSupplier(vm.searchOrg).then(function (res) {
+          let suppList = res.data;
+          vm.getSuppList(suppList);
+        });
+        this.apiGetOrg();
+      },
+
+      methods: {
+        toggleRightMenu() {
+          this.rightMenu = !this.rightMenu;
+        },
+
+        showAddDialog: function () {
+          this.dialog = !this.dialog;
+          this.isEdit = false;
+
+          this.supplier.suppName = '';
+          this.supplier.tel = '';
+          this.supplier.fax = '';
+          this.supplier.address = '';
+          this.supplier.org = '';
+          this.requiredRule = true;
+          this.apiGetOrg();
+        },
+        showEditDialog: function (item) {
+          this.editedSupp = item || {}
+          this.dialog = !this.dialog;
+          this.apiGetOrg();
+          this.apiGetSupplierById(item.item.suppId);
+        },
+        showDeleteDialog: function (item) {
+          this.deleteSupp = item;
+          this.dialogDelete = !this.dialogDelete;
+        },
+        deleteSupplier: function () {
+          let vm = this;
+          let id = vm.deleteSupp.item.suppId;
+
+          vm.apiDeleteSupplier(id).then(function (res) {
+            vm.apiGetSupplier(vm.searchOrg).then(function (getSupp) {
+              vm.getSuppList(getSupp.data);
+              vm.dialogDelete = false;
+              toastr.success("廠商資料刪除成功 !");
+            });
+          });
+        },
+        confirmUpdateSupplier: function (isEdit) {
+          let vm = this;
+          if (isEdit) {
+            vm.apiPutSupplier(vm.supplier.id, vm.supplier.suppName, vm.supplier.tel,
+              vm.supplier.fax, vm.supplier.address, vm.supplier.org);
+
+          } else {
+            if (this.supplier.suppName == '' || this.supplier.org == '') {
+              toastr.error("廠商或所屬廠處為必填欄位 !");
+              return false;
+            }
+            vm.apiPostSupplier(vm.supplier.suppName, vm.supplier.tel, vm.supplier.fax,
+              vm.supplier.address, vm.supplier.org);
+          }
+          vm.dialog = false;
+        },
+
+        getSuppList: function (suppList) {
+          this.suppList = suppList;
+          this.dtSuppItem = suppList;
+        },
+
+        apiGetOrg: function () {
+          let orgs = [{ label_: "台中", val_: "1" }, { label_: "台南", val_: "2" }, { label_: "台北", val_: "3" }];
+          this.orgList = orgs;
+          this.searchOrg = orgs[0].val_;
+          this.supplier.org = orgs[0].val_;
+        },
+        apiGetSupplier: function (org) {
+          return apiRequest.get('/getSupplier?org=' + org);
+        },
+        apiGetSupplierById: function (suppId) {
+          let vm = this;
+
+          apiRequest.get('/getSupplierBySuppId?suppId=' + suppId).then(function (res) {
+            let supp = res.data[0];
+            vm.isEdit = true;
+            vm.supplier.id = supp.id;
+            vm.supplier.id = supp.suppId;
+            vm.supplier.suppName = supp.suppName;
+            vm.supplier.tel = supp.tel;
+            vm.supplier.fax = supp.fax;
+            vm.supplier.address = supp.address;
+            vm.supplier.org = supp.org;
+          });
+        },
+        apiGetSuppWithSearch: function () {
+          let vm = this;
+          apiRequest.get('/getSuppByCondi?org=' + vm.searchOrg + '&suppNM=' + vm.searchSupp)
+            .then(function (res) {
+              vm.getSuppList(res.data);
+            });
+        },
+        apiPostSupplier: function (suppName, tel, fax, address, org) {
+          let vm = this;
+          let param = {
+            "suppName": suppName,
+            "tel": tel,
+            "fax": fax,
+            "address": address,
+            "org": org,
+            "status": true
+          };
+
+          axios.post(baseURL + '/postSupplier', param, { headers: config })
+            .then(function (res) {
+              if (res.data == "ok") {
+                vm.apiGetSupplier(vm.searchOrg).then(function (res) {
+                  vm.getSuppList(res.data);
+                  toastr.success("廠商資料新增成功 !");
+                });
+              } else {
+                console.log("Post Supplier Error !");
+              }
+            });
+        },
+        apiPutSupplier: function (id, suppName, tel, fax, address, org) {
+          let vm = this;
+          let param = {
+            "suppId": id,
+            "suppName": suppName,
+            "tel": tel,
+            "fax": fax,
+            "address": address,
+            "org": org,
+            "status": true
+          };
+
+          axios.post(baseURL + '/putSupplier', param, { headers: config })
+            .then(function (res) {
+              if (res.data == "ok") {
+                vm.apiGetSupplier(vm.searchOrg).then(function (res) {
+                  vm.getSuppList(res.data);
+                  toastr.success("廠商資料更新成功 !");
+                });
+              } else {
+                console.log("Put Supplier Error !");
+              }
+            });
+        },
+        apiDeleteSupplier: function (id) {
+          return axios.post(baseURL + '/deleteSupplier/' + id, {}, { headers: config });
+        }
+      }
+    });
+
+    Vue.config.productionTip = false;
+  </script>
+</body>
+</html>

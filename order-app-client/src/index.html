@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@1.5.14/dist/vuetify.min.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/babel-polyfill/dist/polyfill.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@1.5.14/dist/vuetify.min.js" crossorigin="anonymous"></script>
+    <script src='js/axios.js'></script>
+    <style>
+        .v-btn,
+        .v-card {
+            border-radius: 4px;
+        }  
+        
+        .v-card__title {
+            text-transform: uppercase;
+        } 
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <v-app :class="{ 'pa-3': $vuetify.breakpoint.smAndUp }" :dark="darkTheme" 
+            style="background: #2e5a6b;" id="inspire">
+            <v-container>
+                <v-layout wrap>
+                    <v-flex sm12 md6 offset-md3>
+                        <v-card elevation="4" light tag="section">
+                            <v-card-title>
+                                <v-layout align-center justify-space-between>
+                                    <h3 class="headline"><b>
+                                        {{ platformName }}
+                                    </b></h3>
+                                    <v-flex>
+                                        <!-- <v-img :alt="platformName" class="ml-3" contain height="48px"
+                                            position="center right"
+                                            src="https://www.mobygames.com/images/i/12/25/1435075.png"></v-img> -->
+                                    </v-flex>
+                                </v-layout>
+                            </v-card-title>
+                            <v-divider></v-divider>
+                            <br />
+                            <v-card-text>
+                                <!-- <p>Sign in with your username and password:</p> -->
+                                <v-form>
+                                    <v-text-field outline label="帳號" type="text" v-model="username"
+                                        prepend-inner-icon="mdi-account">
+                                    </v-text-field>
+                                    <v-text-field outline hide-details label="密碼" type="password"
+                                        v-model="password" prepend-inner-icon="mdi-lock"></v-text-field>
+                                </v-form>
+                            </v-card-text>
+                            <v-divider></v-divider>
+                            <v-card-actions :class="{ 'pa-3': $vuetify.breakpoint.smAndUp }">
+                                <v-btn color="info" flat>
+                                    Forgot password?
+                                </v-btn>
+                                <v-spacer></v-spacer>
+                                <v-btn color="info" :large="$vuetify.breakpoint.smAndUp"
+                                    @click="sysLogin()">
+                                    <!-- <v-icon left>forward</v-icon> -->
+                                    <b>登入</b>
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-flex>
+                    <v-flex sm12 md6 offset-md3>
+                        <v-layout align-center justify-space-between>
+                            <!-- <p class="caption my-3">
+                                <a href="#">Privacy Policy</a>
+                                |
+                                <a href="#">Terms of Service</a>
+                            </p> -->
+                            <p class="caption my-3">Powered by Ruhsu - 2020</p>
+                        </v-layout>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+        </v-app>
+    </div>
+
+    <script>
+        console.clear();
+
+        // const auth = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZGltaW4iLCJpYXQiOjE2MDcxNDI3ODcsImV4cCI6MTYwNzE0MzY4N30.NHDn0Wqb2JrCCve0zuRExGnAeGNhFHewBrmJrchL30SX4BVEDwqGcsi8OsoJLVcJw33yUrioMTQW3LhLCGijBg";
+        const baseURL = "http://127.0.0.1:8080/api";
+        const config = {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            //'Authorization': 'Bearer ' + auth
+        };
+        var apiRequest = axios.create({
+            baseURL: baseURL,
+            headers: config
+        });
+
+        const app = new Vue({
+            el: '#app',
+            data: function() {
+                return {
+                    darkTheme: true,
+                    platformName: '訂餐管理平台',
+                    username: null,
+                    password: null
+                }
+            },
+            methods: {
+                sysLogin: function() {
+                    let vm = this;
+                    let param = {
+                        "username": vm.username,
+                        "password": vm.password
+                    };
+
+                    axios.post(baseURL + '/auth/signin', param, { headers: config })
+                    .then(function (res) {
+                        if (res.status == 200) {
+                            vm.tokenSuccess(false, res);
+                            document.location.replace('./supplier.html');
+                        } else {
+                            console.log("Login Error !");
+                        }
+                    });
+                },
+
+                tokenSuccess(err, res) {
+                    if(err) {
+                        throw err;
+                    }
+                    window.sessionStorage.username = res.data.username;
+                    window.sessionStorage.accessToken = res.data.accessToken;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

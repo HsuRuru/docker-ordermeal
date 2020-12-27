@@ -1,0 +1,57 @@
+version: '3.7'
+
+services:
+  app-server:
+#    container_name: app-server
+    build:
+      context: order-app-server
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:sqlserver://db:1433;databaseName=OrderMeal;
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: 1qaz@WSX
+    networks:
+      - backend
+      - frontend
+
+  app-client:
+#    container_name: app-client
+    build:
+      context: order-app-client
+      dockerfile: Dockerfile
+    ports:
+      - "5002:80"
+    restart: always
+    depends_on:
+      - app-server
+    networks:
+      - frontend
+
+  db:
+#    container_name: db
+    image: microsoft/mssql-server-linux
+    ports:
+      - "1433:1433"
+    restart: always
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "1qaz@WSX"
+#      MSSQL_PID: "Developer"
+    volumes:
+      - db-data:/var/lib/mssql
+    networks:
+      - backend
+
+# Volumes
+volumes:
+  db-data:
+
+# Networks to be created to facilitate communication between containers
+networks:
+  backend:
+  frontend:

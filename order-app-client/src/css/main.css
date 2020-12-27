@@ -1,0 +1,35 @@
+body {
+    font-family: 'Microsoft JhengHei' !important;
+}
+
+.bg-DarkGreen {
+    background: rgb(53, 126, 126);
+    color: #fff;
+}
+
+.bg-Blue {
+    background: rgb(71, 131, 206);
+    color: #fff;
+}
+
+.bg-DarkRed {
+    background: #ec4b4b;
+    color: #fff;
+}
+
+.init-font {
+    font-family: 'Microsoft JhengHei' !important;
+}
+
+.text-start, span {
+    font-size: 15px !important;
+    font-family: 'Microsoft JhengHei' !important;
+}
+
+.v-data-table-header {
+    background: #f1f1f1;
+}
+
+[v-cloak] {
+    display: none;
+}

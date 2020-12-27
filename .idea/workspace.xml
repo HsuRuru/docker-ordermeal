@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="66d09f82-0f30-450f-b520-0c544557d942" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="C:\Program Files\JetBrains\IntelliJ IDEA 2020.2.3\plugins\maven\lib\maven3" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="1lyCcjf78FhMqkIHcToLhgYlAxa" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../spring-security-react-ant-design-polls-app" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="Docker" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\RU_doc\Ru\Study\Docker\spring-order-app-2\order-app-client\src" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="66d09f82-0f30-450f-b520-0c544557d942" name="Default Changelist" comment="" />
+      <created>1608560026102</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1608560026102</updated>
+      <workItem from="1608560027190" duration="2010000" />
+      <workItem from="1608640341797" duration="5272000" />
+      <workItem from="1609036442732" duration="7688000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="345" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1609038869942">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="345" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.680@0.0.1280.680" timestamp="1609038869942" />
+    <state x="255" y="119" key="FileChooserDialogImpl" timestamp="1609040277868">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="255" y="119" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1609040277868" />
+    <state width="963" height="162" key="GridCell.Tab.0.bottom" timestamp="1609043145574">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="963" height="162" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1609043145574" />
+    <state width="963" height="162" key="GridCell.Tab.0.center" timestamp="1609043145574">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="963" height="162" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1609043145574" />
+    <state width="963" height="162" key="GridCell.Tab.0.left" timestamp="1609043145574">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="963" height="162" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1609043145574" />
+    <state width="963" height="162" key="GridCell.Tab.0.right" timestamp="1609043145574">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="963" height="162" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1609043145574" />
+    <state width="207" height="477" key="HiddenNamespacesPopup" timestamp="1609038723249">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="207" height="477" key="HiddenNamespacesPopup/0.0.1280.680@0.0.1280.680" timestamp="1609038723249" />
+    <state x="77" y="0" key="SettingsEditor" timestamp="1609037699866">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="77" y="0" key="SettingsEditor/0.0.1280.680@0.0.1280.680" timestamp="1609037699866" />
+  </component>
+</project>
