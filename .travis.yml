@@ -9,7 +9,7 @@ services:
 # script:
 #   - docker run ruhsu/client-test npm test -- --coverage
 
-after_success:
-  - docker build -t ruhsu/client ./order-app-client
-  - docker build -t ruhsu/server ./order-app-server
+#after_success:
+#  - docker build -t ruhsu/client ./order-app-client
+#  - docker build -t ruhsu/server ./order-app-server
   # Take those images and push them to docker hub
