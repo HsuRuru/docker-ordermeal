@@ -18,16 +18,13 @@ deploy:
 
   # from s3
   evn: "DockerOrdermeal-env"
-  bucket_name: "elasticbeanstalk-us-east-1-388248961413"
+  bucket_name: "elasticbeanstalk-us-east-1-901814024087"
   bucket_path: "docker-ordermeal"
   on:
     branch: master
   access_key_id: $AWS_ACCESS_KEY
   secret_access_key: $AWS_SECRET_KEY
 
-
-#access_key_id: $AWS_ACCESS_KEY
-#secret_access_key: $AWS_SECRET_KEY
 
 
 #after_success:
