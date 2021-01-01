@@ -14,6 +14,7 @@ services:
 deploy:
   provider: elasticbeanstalk
   region: "us-east-1"
+  edge: true
   app: "docker-ordermeal"
 
   # from s3
@@ -24,7 +25,7 @@ deploy:
     branch: master
   access_key_id: $AWS_ACCESS_KEY
   secret_access_key: $AWS_SECRET_KEY
-  edge: true
+
 
 
 #after_success:
