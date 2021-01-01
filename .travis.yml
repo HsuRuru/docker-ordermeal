@@ -10,7 +10,26 @@ services:
 # script:
 #   - docker run ruhsu/client-test npm test -- --coverage
 
+# from aws
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-1"
+  app: "docker-ordermeal"
+
+  # from s3
+  evn: "DockerOrdermeal-env"
+  bucket_name: "elasticbeanstalk-us-east-1-388248961413"
+  bucket_path: "docker-ordermeal"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+
+
+#access_key_id: $AWS_ACCESS_KEY
+#secret_access_key: $AWS_SECRET_KEY
+
+
 #after_success:
 #  - docker build -t ruhsu/client ./order-app-client
 #  - docker build -t ruhsu/server ./order-app-server
-  # Take those images and push them to docker hub
